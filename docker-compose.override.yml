@@ -1,12 +1,21 @@
 services:
   api:
     environment:
-      PG_PASSWORD: ${PG_PASSWORD}
-      JWT_SECRET: ${JWT_SECRET}
-      CLIENT_URL: https://${DOMAIN}
+      CLIENT_URL: https://omnivore-omnivore.smyja6.easypanel.host
       GATEWAY_URL: http://api:8080/api
-
+      CORS_ALLOWED_ORIGIN: https://omnivore-omnivore.smyja6.easypanel.host
+      # keep the other env-vars (PG_HOST, JWT_SECRET, etc.) as they are
   web:
+    build:
+      context: .
+      dockerfile: ./packages/web/Dockerfile
+      args:
+        APP_ENV: prod
+        BASE_URL: https://omnivore-omnivore.smyja6.easypanel.host
+        SERVER_BASE_URL: https://omnivore-api.smyja6.easypanel.host
+        HIGHLIGHTS_BASE_URL: https://omnivore-omnivore.smyja6.easypanel.host
     environment:
-      NEXT_PUBLIC_BASE_URL: https://${DOMAIN}
-      NEXT_PUBLIC_SERVER_BASE_URL: http://api:8080
+      NEXT_PUBLIC_APP_ENV: prod
+      NEXT_PUBLIC_BASE_URL: https://omnivore-omnivore.smyja6.easypanel.host
+      NEXT_PUBLIC_SERVER_BASE_URL: https://omnivore-api.smyja6.easypanel.host
+      NEXT_PUBLIC_HIGHLIGHTS_BASE_URL: https://omnivore-omnivore.smyja6.easypanel.host
