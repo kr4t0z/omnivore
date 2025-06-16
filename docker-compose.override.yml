@@ -1,0 +1,12 @@
+services:
+  api:
+    environment:
+      PG_PASSWORD: ${PG_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      CLIENT_URL: https://${DOMAIN}
+      GATEWAY_URL: http://api:8080/api
+
+  web:
+    environment:
+      NEXT_PUBLIC_BASE_URL: https://${DOMAIN}
+      NEXT_PUBLIC_SERVER_BASE_URL: http://api:8080
