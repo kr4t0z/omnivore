@@ -31,29 +31,29 @@ services:
       -c max_replication_slots=10 
       -c hot_standby_feedback=on
 
-  postgres-replica:
-    <<: *postgres-common
-    container_name: 'omnivore-postgres-replica'
-    expose:
-      - 5433
-    ports:
-      - '5433:5432'
-    environment:
-      PGUSER: replicator
-      PGPASSWORD: replicator_password
-    command: |
-      bash -c "
-      until pg_basebackup --pgdata=/var/lib/postgresql/data -R --slot=replication_slot --host=postgres --port=5432
-      do
-      echo 'Waiting for primary to connect...'
-      sleep 1s
-      done
-      echo 'Backup done, starting replica...'
-      chmod 0700 /var/lib/postgresql/data
-      postgres
-      "
-    depends_on:
-      - postgres
+  # postgres-replica:
+  #   <<: *postgres-common
+  #   container_name: 'omnivore-postgres-replica'
+  #   expose:
+  #     - 5433
+  #   ports:
+  #     - '5433:5432'
+  #   environment:
+  #     PGUSER: replicator
+  #     PGPASSWORD: replicator_password
+  #   command: |
+  #     bash -c "
+  #     until pg_basebackup --pgdata=/var/lib/postgresql/data -R --slot=replication_slot --host=postgres --port=5432
+  #     do
+  #     echo 'Waiting for primary to connect...'
+  #     sleep 1s
+  #     done
+  #     echo 'Backup done, starting replica...'
+  #     chmod 0700 /var/lib/postgresql/data
+  #     postgres
+  #     "
+  #   depends_on:
+  #     - postgres
 
   migrate:
     build:
