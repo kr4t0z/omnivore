@@ -94,10 +94,12 @@ services:
       - IMAGE_PROXY_SECRET=some-secret
       - JWT_SECRET=some_secret
       - SSO_JWT_SECRET=some_sso_secret
-      - CLIENT_URL=http://localhost:3003
-      - GATEWAY_URL=http://localhost:8080/api
+      - CLIENT_URL=https://omnivore-omnivore.smyja6.easypanel.host
+      - GATEWAY_URL=http://api:8080/api
       - CONTENT_FETCH_URL=http://content-fetch:8080/?token=some_token
       - REDIS_URL=redis://redis:6379
+      - CORS_ALLOWED_ORIGIN=https://omnivore-omnivore.smyja6.easypanel.host
+
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -110,17 +112,17 @@ services:
       dockerfile: ./packages/web/Dockerfile
       args:
         - APP_ENV=prod
-        - BASE_URL=http://localhost:3003
-        - SERVER_BASE_URL=http://localhost:4000
-        - HIGHLIGHTS_BASE_URL=http://localhost:3003
+        - BASE_URL=https://omnivore-omnivore.smyja6.easypanel.host
+        - SERVER_BASE_URL=https://omnivore-api.smyja6.easypanel.host
+        - HIGHLIGHTS_BASE_URL=https://omnivore-omnivore.smyja6.easypanel.host
     container_name: 'omnivore-web'
     ports:
       - '3003:8080'
     environment:
       - NEXT_PUBLIC_APP_ENV=prod
-      - NEXT_PUBLIC_BASE_URL=http://localhost:3003
-      - NEXT_PUBLIC_SERVER_BASE_URL=http://localhost:4000
-      - NEXT_PUBLIC_HIGHLIGHTS_BASE_URL=http://localhost:3003
+      - NEXT_PUBLIC_BASE_URL=https://omnivore-omnivore.smyja6.easypanel.host
+      - NEXT_PUBLIC_SERVER_BASE_URL=https://omnivore-api.smyja6.easypanel.host
+      - NEXT_PUBLIC_HIGHLIGHTS_BASE_URL=https://omnivore-omnivore.smyja6.easypanel.host
     depends_on:
       api:
         condition: service_healthy
@@ -136,7 +138,7 @@ services:
       - JWT_SECRET=some_secret
       - VERIFICATION_TOKEN=some_token
       - REST_BACKEND_ENDPOINT=http://api:8080/api
-      - REDIS_URL=${REDIS_URL}
+      - REDIS_URL=redis://redis:6379
     depends_on:
       redis:
         condition: service_healthy
