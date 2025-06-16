@@ -106,6 +106,18 @@ services:
       redis:
         condition: service_healthy
 
+  rss-watcher:
+    image: ghcr.io/omnivore-app/omnivore-api:main # same image as the api
+    command: ['node', 'dist/rss/watch.js']
+    environment:
+      - DATABASE_URL=postgresql://omnivore:postgres@postgres:5432/omnivore
+      - REDIS_URL=redis://redis:6379/0
+      - LOG_LEVEL=info
+    depends_on:
+      - api
+      - redis
+      - postgres
+
   web:
     build:
       context: .
