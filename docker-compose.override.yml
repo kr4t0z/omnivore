@@ -1,13 +1,19 @@
 services:
   api:
-    image: ghcr.io/omnivore-app/sh-api:latest
     environment:
       CLIENT_URL: https://omnivore-omnivore.smyja6.easypanel.host
       GATEWAY_URL: http://api:8080/api
       CORS_ALLOWED_ORIGIN: https://omnivore-omnivore.smyja6.easypanel.host
       # keep the other env-vars (PG_HOST, JWT_SECRET, etc.) as they are
   web:
-    image: ghcr.io/omnivore-app/sh-web:latest
+    build:
+      context: .
+      dockerfile: ./packages/web/Dockerfile
+      args:
+        APP_ENV: prod
+        BASE_URL: https://omnivore-omnivore.smyja6.easypanel.host
+        SERVER_BASE_URL: https://omnivore-api.smyja6.easypanel.host
+        HIGHLIGHTS_BASE_URL: https://omnivore-omnivore.smyja6.easypanel.host
     environment:
       NEXT_PUBLIC_APP_ENV: prod
       NEXT_PUBLIC_BASE_URL: https://omnivore-omnivore.smyja6.easypanel.host
