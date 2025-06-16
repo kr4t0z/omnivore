@@ -134,7 +134,7 @@ services:
       - JWT_SECRET=some_secret
       - VERIFICATION_TOKEN=some_token
       - REST_BACKEND_ENDPOINT=http://api:8080/api
-      - REDIS_URL=redis://redis:6379
+      - REDIS_URL=${REDIS_URL}
     depends_on:
       redis:
         condition: service_healthy
