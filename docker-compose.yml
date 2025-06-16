@@ -1,23 +1,21 @@
 version: '3'
-x-postgres:
-  &postgres-common
-  image: "ankane/pgvector:v0.5.1"
+x-postgres: &postgres-common
+  image: 'ankane/pgvector:v0.5.1'
   user: postgres
   healthcheck:
-    test: "exit 0"
+    test: 'exit 0'
     interval: 2s
     timeout: 12s
     retries: 3
 
-
 services:
   postgres:
     <<: *postgres-common
-    container_name: "omnivore-postgres"
+    container_name: 'omnivore-postgres'
     expose:
       - 5432
     ports:
-      - "5432:5432"
+      - '5432:5432'
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -35,11 +33,11 @@ services:
 
   postgres-replica:
     <<: *postgres-common
-    container_name: "omnivore-postgres-replica"
+    container_name: 'omnivore-postgres-replica'
     expose:
       - 5433
     ports:
-      - "5433:5432"
+      - '5433:5432'
     environment:
       PGUSER: replicator
       PGPASSWORD: replicator_password
@@ -61,7 +59,7 @@ services:
     build:
       context: .
       dockerfile: ./packages/db/Dockerfile
-    container_name: "omnivore-migrate"
+    container_name: 'omnivore-migrate'
     command: '/bin/sh ./packages/db/setup.sh' # Also create a demo user with email: demo@omnivore.app, password: demo_password
     environment:
       - PGPASSWORD=postgres
@@ -77,11 +75,11 @@ services:
     build:
       context: .
       dockerfile: ./packages/api/Dockerfile
-    container_name: "omnivore-api"
+    container_name: 'omnivore-api'
     ports:
-      - "4000:8080"
+      - '4000:8080'
     healthcheck:
-      test: ["CMD-SHELL", "nc -z 0.0.0.0 8080 || exit 1"]
+      test: ['CMD-SHELL', 'nc -z 0.0.0.0 8080 || exit 1']
       interval: 15s
       timeout: 90s
     environment:
@@ -96,7 +94,7 @@ services:
       - IMAGE_PROXY_SECRET=some-secret
       - JWT_SECRET=some_secret
       - SSO_JWT_SECRET=some_sso_secret
-      - CLIENT_URL=http://localhost:3000
+      - CLIENT_URL=http://localhost:3003
       - GATEWAY_URL=http://localhost:8080/api
       - CONTENT_FETCH_URL=http://content-fetch:8080/?token=some_token
       - REDIS_URL='redis://redis:6379'
@@ -110,17 +108,17 @@ services:
       dockerfile: ./packages/web/Dockerfile
       args:
         - APP_ENV=prod
-        - BASE_URL=http://localhost:3000
+        - BASE_URL=http://localhost:3003
         - SERVER_BASE_URL=http://localhost:4000
-        - HIGHLIGHTS_BASE_URL=http://localhost:3000
-    container_name: "omnivore-web"
+        - HIGHLIGHTS_BASE_URL=http://localhost:3003
+    container_name: 'omnivore-web'
     ports:
-      - "3000:8080"
+      - '3003:8080'
     environment:
       - NEXT_PUBLIC_APP_ENV=prod
-      - NEXT_PUBLIC_BASE_URL=http://localhost:3000
+      - NEXT_PUBLIC_BASE_URL=http://localhost:3003
       - NEXT_PUBLIC_SERVER_BASE_URL=http://localhost:4000
-      - NEXT_PUBLIC_HIGHLIGHTS_BASE_URL=http://localhost:3000
+      - NEXT_PUBLIC_HIGHLIGHTS_BASE_URL=http://localhost:3003
     depends_on:
       api:
         condition: service_healthy
@@ -129,9 +127,9 @@ services:
     build:
       context: .
       dockerfile: ./packages/content-fetch/Dockerfile
-    container_name: "omnivore-content-fetch"
+    container_name: 'omnivore-content-fetch'
     ports:
-      - "9090:8080"
+      - '9090:8080'
     environment:
       - JWT_SECRET=some_secret
       - VERIFICATION_TOKEN=some_token
@@ -144,9 +142,9 @@ services:
         condition: service_healthy
 
   redis:
-    image: "redis:7.2.4"
-    container_name: "omnivore-redis"
+    image: 'redis:7.2.4'
+    container_name: 'omnivore-redis'
     ports:
-      - "6379:6379"
+      - '6379:6379'
     healthcheck:
-      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      test: ['CMD', 'redis-cli', '--raw', 'incr', 'ping']
